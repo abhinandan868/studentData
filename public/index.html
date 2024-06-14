@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 90%;
+            max-width: 1200px;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        td {
+            border-bottom: 1px solid #dee2e6;
+        }
+        td:last-child {
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Roll No</th>
+                <th>Enrollment Number</th>
+                <th>City</th>
+                <th>Date of Birth</th>
+                <th>Marks</th>
+                <th>Caste</th>
+            </tr>
+        </thead>
+        <tbody id="student-table-body">
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/getBookStoreData')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const tableBody = document.getElementById('student-table-body');
+                    data.forEach(student => {
+                        const row = document.createElement('tr');
+
+                        const idCell = document.createElement('td');
+                        idCell.textContent = student.id;
+                        row.appendChild(idCell);
+
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = student.name;
+                        row.appendChild(nameCell);
+
+                        const lastNameCell = document.createElement('td');
+                        lastNameCell.textContent = student.lastName;
+                        row.appendChild(lastNameCell);
+
+                        const rollNoCell = document.createElement('td');
+                        rollNoCell.textContent = student.rollNo;
+                        row.appendChild(rollNoCell);
+
+                        const enrollmentNumberCell = document.createElement('td');
+                        enrollmentNumberCell.textContent = student.enrollmentNumber;
+                        row.appendChild(enrollmentNumberCell);
+
+                        const cityCell = document.createElement('td');
+                        cityCell.textContent = student.city;
+                        row.appendChild(cityCell);
+
+                        const dobCell = document.createElement('td');
+                        dobCell.textContent = new Date(student.dob).toLocaleDateString();
+                        row.appendChild(dobCell);
+
+                        const marksCell = document.createElement('td');
+                        marksCell.textContent = `Math: ${student.marks.math}, Science: ${student.marks.science}, English: ${student.marks.english}, History: ${student.marks.history}, Geography: ${student.marks.geography}`;
+                        row.appendChild(marksCell);
+
+                        const casteCell = document.createElement('td');
+                        casteCell.textContent = student.caste;
+                        row.appendChild(casteCell);
+
+                        tableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
